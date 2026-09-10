@@ -64,7 +64,7 @@ CREATE TABLE Results (
     ResultID INT IDENTITY(1,1) PRIMARY KEY,
     EnrolmentID INT NOT NULL UNIQUE FOREIGN KEY REFERENCES Enrolments(EnrolmentID) ON DELETE CASCADE,
     ParticipantID INT NOT NULL FOREIGN KEY REFERENCES Users(UserID),
-    FinishTime TIME(0) NOT NULL, -- Storing race duration as hh:mm:ss
+    FinishTime TIME(0) NOT NULL,
     Position INT NOT NULL CHECK (Position > 0),
     TotalFinishers INT NOT NULL CHECK (TotalFinishers > 0),
     RecordedDate DATETIME NOT NULL DEFAULT GETDATE(),
@@ -72,3 +72,58 @@ CREATE TABLE Results (
 );
 GO
 
+INSERT INTO Roles (RoleName) 
+VALUES ('Organiser'), ('Participant');
+
+
+INSERT INTO Users (RoleID, FullName, Email, PasswordHash, ProfilePicUrl) 
+VALUES
+(1, 'Seidzo Enge', 'sipho.events@raceday.co.za', 'dummy_hash_1', 'https://images.raceday.local/profiles/seidzo.jpg'),
+(1, 'Thendo Mbo', 'ansie.m@capeathletics.org.za', 'dummy_hash_2', 'https://images.raceday.local/profiles/thando.jpg'),
+(2, 'Khanyi Molele', 'thabo.molefe@gmail.com', 'dummy_hash_3', 'https://images.raceday.local/profiles/khanyi.jpg'),
+(2, 'Liz Muller', 'liezl.vanzyl@outlook.com', 'dummy_hash_4', 'https://images.raceday.local/profiles/liz.jpg');
+
+
+INSERT INTO Events (OrganiserID, EventName, Description, EventDate, Location, DistanceKm, EventType, BannerUrl) 
+VALUES
+(1, 'Soweto 10k Community Challenge', 'Scenic township road run highlighting historical landmarks in Soweto.', '2026-10-15 06:30:00', 'Soweto, Johannesburg', 10.00, 'Run', 'https://images.raceday.local/banners/soweto10k.jpg'),
+(1, 'Cape Peninsula Cycle Classic', 'Coastal road cycling challenge around the iconic False Bay scenic routes.', '2026-11-20 06:00:00', 'Simon''s Town, Cape Town', 42.50, 'Cycle', 'https://images.raceday.local/banners/peninsula_cycle.jpg'),
+(2, 'Durban Promenade Sunrise Walk', 'Family-friendly morning fitness walk along the Durban beachfront promenade.', '2026-12-05 07:00:00', 'North Beach, Durban', 5.00, 'Walk', 'https://images.raceday.local/banners/durban_walk.jpg');
+
+
+INSERT INTO Categories (EventID, CategoryName, Description) 
+VALUES
+(1, 'Open Senior (10km)', 'Ages 20 to 39 competitive division'),
+(1, 'Masters (10km)', 'Ages 40+ competitive division'),
+(2, 'Elite Road (42.5km)', 'Licensed competitive road cycling'),
+(2, 'Fun Ride (42.5km)', 'Recreational non-seeded category'),
+(3, 'General Public (5km)', 'All ages welcome fitness walk');
+
+
+INSERT INTO Enrolments (ParticipantID, EventID, CategoryID, Status) 
+VALUES
+(3, 1, 1, 'Confirmed'),
+(4, 1, 1, 'Confirmed'),
+(3, 2, 3, 'Confirmed'),
+(4, 3, 5, 'Confirmed');
+
+
+INSERT INTO Results (EnrolmentID, ParticipantID, FinishTime, Position, TotalFinishers) 
+VALUES
+(1, 3, '00:41:18', 14, 210),
+(2, 4, '00:48:05', 47, 210);
+
+SELECT 
+    e.EventName, 
+    u.FullName AS Participant, 
+    c.CategoryName, 
+    en.Status,
+    r.FinishTime, 
+    r.Position,
+    r.TotalFinishers
+FROM Enrolments en
+INNER JOIN Events e ON en.EventID = e.EventID
+INNER JOIN Users u ON en.ParticipantID = u.UserID
+INNER JOIN Categories c ON en.CategoryID = c.CategoryID
+LEFT JOIN Results r ON en.EnrolmentID = r.EnrolmentID;
+GO
