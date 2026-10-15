@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using RaceDay.Api.Data;
 
 namespace RaceDay.Api
 {
@@ -7,10 +9,17 @@ namespace RaceDay.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Addition of services 
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // DbContext Registration
+
+            builder.Services.AddDbContext<RaceDayDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+           
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
