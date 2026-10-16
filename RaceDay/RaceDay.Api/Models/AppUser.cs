@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace RaceDay.Api.Models
 {
     public class AppUser
     {
+        [Key]
         public int UserID { get; set; }
         public int RoleID { get; set; }
         public string FullName { get; set; }

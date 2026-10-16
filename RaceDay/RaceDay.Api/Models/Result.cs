@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace RaceDay.Api.Models
 {
     public class Result
     {
+        [Key]
         public int ResultID { get; set; }
         public int EnrolmentID { get; set; }
         public int ParticipantID { get; set; }
