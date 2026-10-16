@@ -9,6 +9,16 @@ namespace RaceDay.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Configure in-memory session management
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+            });
+
             // Addition of services 
 
             builder.Services.AddControllers();
@@ -24,6 +34,15 @@ namespace RaceDay.Api
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
+            // Enable session state for requests
+            app.UseSession();
+
+            app.UseAuthorization();
+            app.MapControllers();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
