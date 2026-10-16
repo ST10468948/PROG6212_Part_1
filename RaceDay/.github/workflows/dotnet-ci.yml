@@ -1,0 +1,29 @@
+name: .NET 8 CI Pipeline - RaceDay
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Set up .NET 8 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore RaceDay.sln
+
+    - name: Build Solution
+      run: dotnet build RaceDay.sln --configuration Release --no-restore
+
+    - name: Run Automated xUnit Tests
+      run: dotnet test RaceDay.sln --configuration Release --no-build --verbosity normal
