@@ -28,7 +28,7 @@ namespace RaceDay.Api
             builder.Services.AddDbContext<RaceDayDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-           
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -59,6 +59,7 @@ namespace RaceDay.Api
             app.MapControllers();
 
             app.Run();
+
         }
     }
 }

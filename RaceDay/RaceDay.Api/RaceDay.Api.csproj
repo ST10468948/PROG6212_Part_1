@@ -21,4 +21,8 @@
     <ProjectReference Include="..\RaceDay.Contracts\RaceDay.Contracts.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="RaceDay.Api.Tests" />
+	</ItemGroup>
+
 </Project>
